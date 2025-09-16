@@ -6,228 +6,349 @@
   <title>Medical Recommendation System</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --main-bg-color: #f1f5f8;
-      --card-bg-color: #ffffff;
-      --card-alt-bg-color: #f6f8fb;
-      --primary-color: #2c3e50;
-      --secondary-color: #3498db;
-      --text-color: #555;
-      --heading-color: #2c3e50;
+      --header-bg-start: #4A90E2; /* Blue */
+      --header-bg-end: #6A11CB;   /* Purple */
+      --primary-text-color: #333;
+      --secondary-text-color: #555;
+      --light-gray-bg: #f8f9fa; /* Light background for body */
+      --card-bg-light: #ffffff;
+      --card-bg-gray: #f2f4f7; /* Background for recommendations sections */
       --border-color: #e0e0e0;
-      --shadow-color: rgba(0, 0, 0, 0.08);
-      --font-family: 'Roboto', sans-serif;
+      --button-bg: #4A90E2;
+      --button-hover: #3a7bd5;
+      --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.08);
+      --shadow-medium: 0 6px 20px rgba(0, 0, 0, 0.12);
+      --border-radius: 12px;
     }
 
     body {
-      font-family: var(--font-family);
-      background-color: var(--main-bg-color);
+      font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
+      background-color: var(--light-gray-bg);
+      color: var(--primary-text-color);
       display: flex;
       flex-direction: column;
       align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box; /* Added for global sizing consistency */
     }
 
-    /* Header Section */
+    /* Header section */
     .header {
       width: 100%;
-      background: linear-gradient(90deg, #3498db, #2980b9);
+      background: linear-gradient(to right, var(--header-bg-start), var(--header-bg-end));
       color: white;
       text-align: center;
-      padding: 60px 20px 40px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      padding: 50px 20px;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow-medium);
+      box-sizing: border-box; /* Ensures padding is handled correctly */
+    }
+
+    .header-logo {
+      width: 150px; /* Adjust size as needed */
+      height: auto;
+      margin-bottom: 10px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .header h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
       margin: 0;
+      font-size: 2.8em;
+      font-weight: 700;
       letter-spacing: 1px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .header p {
-      font-size: 1rem;
-      font-weight: 400;
-      margin-top: 5px;
+      font-size: 1.2em;
+      margin-top: 10px;
       opacity: 0.9;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.5;
     }
 
-    /* Main Content Wrapper */
-    .container-wrapper {
-      max-width: 850px;
+    /* Main content container for form and results */
+    .content-wrapper {
       width: 100%;
-      padding: 30px 20px;
-      display: grid;
-      grid-template-columns: 1fr;
+      max-width: 800px;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
       gap: 30px;
+      box-sizing: border-box; /* Ensures padding and borders are included in element's total width and height */
     }
 
-    /* Card Styling */
+    /* Card styling */
     .card {
-      background-color: var(--card-bg-color);
-      border-radius: 10px;
-      box-shadow: 0 4px 15px var(--shadow-color);
+      background-color: var(--card-bg-light);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-light);
       padding: 30px;
+      width: 100%; /* Ensures cards take up full width on all screens */
+      box-sizing: border-box;
     }
 
     .card h2 {
-      color: var(--heading-color);
-      font-size: 1.5rem;
-      font-weight: 500;
-      border-bottom: 2px solid var(--border-color);
-      padding-bottom: 10px;
-      margin-top: 0;
+      font-size: 1.6em;
+      color: var(--primary-text-color);
       margin-bottom: 25px;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 15px;
     }
 
     label {
       display: block;
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: var(--heading-color);
-      margin-top: 15px;
-      margin-bottom: 5px;
+      font-weight: 600;
+      margin-top: 20px;
+      margin-bottom: 8px;
+      color: var(--primary-text-color);
+      font-size: 0.95em;
     }
 
     input, textarea, select {
       width: 100%;
-      padding: 10px 12px;
+      padding: 12px 15px;
       border: 1px solid var(--border-color);
-      border-radius: 5px;
-      font-family: var(--font-family);
-      font-size: 1rem;
-      color: var(--text-color);
-      background-color: var(--card-alt-bg-color);
-      box-sizing: border-box;
-      transition: all 0.2s;
+      border-radius: 8px;
+      font-size: 1em;
+      color: var(--primary-text-color);
+      box-sizing: border-box; /* Crucial for form elements */
+      background-color: #fff;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #999;
+      font-style: italic;
     }
 
     input:focus, textarea:focus, select:focus {
+      border-color: var(--header-bg-start);
+      box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
       outline: none;
-      border-color: var(--secondary-color);
-      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
     }
 
     select {
-      -webkit-appearance: none;
-      -moz-appearance: none;
       appearance: none;
-      background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%232c3e50%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13%205.1L146.2%20268.4%2018.6%2074.5a17.6%2017.6%200%200%200-25.3-24.5c-6.1%206.1-7.7%2016.9-3.4%2024.5l130%20165.7c4.6%205.8%2013%205.8%2017.6%200l130-165.7c4.3-7.6%202.7-18.4-3.4-24.5-5.6-5.6-14.1-6.1-20.2-.5z%22%2F%3E%3C%2Fsvg%3E');
+      background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%234A90E2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13%205.1L146.2%20268.4%2018.6%2074.5a17.6%2017.6%200%200%200-25.3-24.5c-6.1%206.1-7.7%2016.9-3.4%2024.5l130%20165.7c4.6%205.8%2013%205.8%2017.6%200l130-165.7c4.3-7.6%202.7-18.4-3.4-24.5-5.6-5.6-14.1-6.1-20.2-.5z%22%2F%3E%3C%2Fsvg%3E');
       background-repeat: no-repeat;
-      background-position: right 12px center;
-      background-size: 10px;
-      padding-right: 30px;
+      background-position: right 15px center;
+      background-size: 12px;
+      padding-right: 35px;
     }
 
     button {
-      width: 100%;
-      padding: 12px;
-      background-color: var(--secondary-color);
+      display: block;
+      width: fit-content;
+      margin: 30px auto 0 auto;
+      padding: 14px 30px;
+      background-color: var(--button-bg);
       color: white;
       border: none;
-      border-radius: 5px;
-      font-size: 1.1rem;
-      font-weight: 500;
+      border-radius: 8px;
+      font-size: 1.1em;
+      font-weight: 600;
       cursor: pointer;
-      margin-top: 25px;
-      transition: background-color 0.2s;
+      transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
     button:hover {
-      background-color: #2980b9;
+      background-color: var(--button-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
     }
-    
+
+    /* Loader styling */
     #loader {
-        display: none;
-        text-align: center;
-        margin-top: 20px;
-        font-size: 1rem;
-        color: var(--secondary-color);
-        font-weight: 500;
+      display: none;
+      text-align: center;
+      margin: 30px 0;
+      font-size: 1.2em;
+      color: var(--header-bg-start);
+      font-weight: 600;
+      animation: pulseText 1.5s infinite ease-in-out;
     }
 
-    /* Recommendations Card */
-    .recommendations-card {
-        padding: 30px;
+    @keyframes pulseText {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.6; }
     }
 
-    .recommendations-card .item {
+    /* Recommendations Section */
+    .recommendations-section {
+      background-color: var(--card-bg-light);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-light);
+      padding: 30px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .recommendations-section .item {
       display: flex;
-      gap: 15px;
+      align-items: flex-start;
+      margin-bottom: 20px;
       padding: 15px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      background-color: var(--card-alt-bg-color);
+      background-color: var(--card-bg-gray);
+      border-radius: 10px;
     }
     
-    .recommendations-card .item:last-child {
+    .recommendations-section .item:last-child {
         margin-bottom: 0;
     }
 
-    .recommendations-card .icon {
-      font-size: 1.5rem;
+    .recommendations-section .item .icon {
+      font-size: 1.8em;
+      margin-right: 15px;
       line-height: 1;
-      color: var(--secondary-color);
+      min-width: 30px;
     }
 
-    .recommendations-card .content {
+    .recommendations-section .item .content {
       flex-grow: 1;
+      min-width: 0;
     }
 
-    .recommendations-card h3 {
-      font-size: 1rem;
+    .recommendations-section .item h3 {
+      font-size: 1.15em;
       font-weight: 600;
-      color: var(--heading-color);
+      color: var(--header-bg-start);
       margin: 0 0 5px 0;
     }
 
-    .recommendations-card .content div {
-      font-size: 0.9rem;
-      color: var(--text-color);
-      line-height: 1.5;
+    .recommendations-section .item div {
+      font-size: 0.95em;
+      color: var(--secondary-text-color);
+      line-height: 1.6;
+      word-wrap: break-word; /* Ensures long words break and wrap */
     }
 
     /* Disclaimer Section */
     .disclaimer-card {
-      background-color: #fef4e5;
-      border: 1px solid #fce8c0;
-      color: #9c6c2b;
-      padding: 20px;
-      margin-top: 20px;
-      border-radius: 10px;
-      font-size: 0.9rem;
-      line-height: 1.5;
-    }
-    
-    .disclaimer-card h3 {
-        color: #9c6c2b;
-        margin: 0 0 10px 0;
-        font-size: 1rem;
-        font-weight: 700;
+      background-color: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+      border-radius: var(--border-radius);
+      padding: 25px;
+      margin-top: 30px;
+      margin-bottom: 50px;
+      max-width: 800px;
+      width: 100%;
+      box-shadow: var(--shadow-light);
+      box-sizing: border-box;
     }
 
-    /* Mobile adjustments */
-    @media (min-width: 768px) {
-      .container-wrapper {
-        grid-template-columns: 1fr 1fr;
+    .disclaimer-card h3 {
+      font-size: 1.2em;
+      font-weight: 700;
+      color: #856404;
+      margin-top: 0;
+      margin-bottom: 15px;
+    }
+
+    .disclaimer-card p {
+      font-size: 0.88em;
+      line-height: 1.6;
+    }
+
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2.2em;
       }
-      .disclaimer-card, #loader {
-        grid-column: 1 / 3;
+      .header p {
+        font-size: 1em;
+      }
+      .content-wrapper {
+        padding: 0 15px;
+      }
+      .card {
+        padding: 25px;
+      }
+      .card h2 {
+        font-size: 1.4em;
+        margin-bottom: 20px;
+      }
+      input, textarea, select, button {
+        font-size: 0.95em;
+      }
+      button {
+        padding: 12px 25px;
+      }
+      .recommendations-section .item {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+      }
+      .recommendations-section .item .icon {
+          margin-right: 0;
+          margin-bottom: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header {
+        padding: 40px 15px;
+      }
+      .header-logo {
+        width: 60px;
+      }
+      .header h1 {
+        font-size: 1.8em;
+      }
+      .header p {
+        font-size: 0.9em;
+      }
+      .card {
+        padding: 20px;
+      }
+      .card h2 {
+        font-size: 1.2em;
+      }
+      label {
+        font-size: 0.9em;
+      }
+      input, textarea, select {
+        padding: 10px 12px;
+        font-size: 0.9em;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 1em;
+      }
+      .disclaimer-card {
+          padding: 20px;
+          margin-top: 20px;
+      }
+      .disclaimer-card h3 {
+          font-size: 1.1em;
+      }
+      .disclaimer-card p {
+          font-size: 0.8em;
       }
     }
   </style>
 </head>
 <body>
   <div class="header">
+    <img src="https://res.cloudinary.com/dowhvdkjh/image/upload/v1758017228/image_puig4p.png" alt="MediGuide AI Logo" class="header-logo">
     <h1>MediGuide</h1>
-    <p>Your AI-powered with Machine learning health assistant</p>
+    <p>Get personalized medical recommendations based on your symptoms</p>
   </div>
 
-  <div class="container-wrapper">
-    <div class="card" id="symptom-card">
+  <div class="content-wrapper">
+    <div class="card" id="form-card">
       <h2>Enter Your Symptoms</h2>
       <form id="symptom-form">
         <label for="age">Age</label>
@@ -242,31 +363,33 @@
         </select>
         
         <label for="symptoms">Symptoms (describe in detail)</label>
-        <textarea id="symptoms" rows="5" placeholder="e.g., persistent headache, mild fever, body aches for 3 days..." required></textarea>
+        <textarea id="symptoms" rows="4" placeholder="Describe your symptoms, their duration, severity, and any other relevant information" required></textarea>
         
         <label for="medical-history">Medical History (optional)</label>
-        <textarea id="medical-history" rows="3" placeholder="e.g., previously diagnosed with asthma, no known allergies..."></textarea>
+        <textarea id="medical-history" rows="3" placeholder="Any existing medical conditions, allergies, or current medications"></textarea>
         
         <button type="submit">Get Recommendations</button>
       </form>
     </div>
 
-    <div id="results" class="card recommendations-card" style="display:none;">
+    <div id="loader">Analyzing your symptoms...</div>
+
+    <div id="results" class="recommendations-section" style="display:none;">
       <h2>Recommendations</h2>
       
       <div class="item">
-        <div class="icon">🩺</div>
+        <div class="icon">🔍</div>
         <div class="content">
           <h3>Disease</h3>
-          <div id="disease-result"></div>
+          <div id="disease-result">Enter your symptoms to get a potential diagnosis.</div>
         </div>
       </div>
 
       <div class="item">
-        <div class="icon">💬</div>
+        <div class="icon">📝</div>
         <div class="content">
           <h3>Description</h3>
-          <div id="description-result"></div>
+          <div id="description-result">Detailed description will appear here.</div>
         </div>
       </div>
 
@@ -274,7 +397,7 @@
         <div class="icon">🛡️</div>
         <div class="content">
           <h3>Precautions</h3>
-          <div id="precautions-result"></div>
+          <div id="precautions-result">Preventive measures will be listed here.</div>
         </div>
       </div>
 
@@ -282,7 +405,7 @@
         <div class="icon">💊</div>
         <div class="content">
           <h3>Medications</h3>
-          <div id="medications-result"></div>
+          <div id="medications-result">Medication suggestions will appear here.</div>
         </div>
       </div>
 
@@ -290,25 +413,21 @@
         <div class="icon">💪</div>
         <div class="content">
           <h3>Workout</h3>
-          <div id="workout-result"></div>
+          <div id="workout-result">Exercise recommendations will be provided here.</div>
         </div>
       </div>
 
       <div class="item">
-        <div class="icon">🥗</div>
+        <div class="icon">🍎</div>
         <div class="content">
           <h3>Diet</h3>
-          <div id="diet-result"></div>
+          <div id="diet-result">Dietary advice will be provided here.</div>
         </div>
       </div>
     </div>
-    
-    <div id="loader">Analyzing symptoms...</div>
-
-    <div class="disclaimer-card">
-      <h3>Disclaimer</h3>
-      <p>This information is for educational purposes only and is not a substitute for professional medical advice. Always consult with a qualified healthcare provider for any health concerns. Do not disregard or delay professional medical advice based on what you read here.</p>
-    </div>
+  </div> <div class="disclaimer-card">
+    <h3>Important Disclaimer</h3>
+    <p>This tool provides recommendations based on the information you provide. It is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition. Never disregard professional medical advice or delay in seeking it because of something you have read here.</p>
   </div>
 
   <script>
@@ -323,28 +442,32 @@
       document.getElementById('loader').style.display = 'block';
       document.getElementById('results').style.display = 'none';
 
-      // Set initial placeholder text in the results card before the API call
-      document.getElementById('disease-result').innerHTML = '—';
-      document.getElementById('description-result').innerHTML = '—';
-      document.getElementById('precautions-result').innerHTML = '—';
-      document.getElementById('medications-result').innerHTML = '—';
-      document.getElementById('workout-result').innerHTML = '—';
-      document.getElementById('diet-result').innerHTML = '—';
+      // Reset results to placeholder text before new query
+      document.getElementById('disease-result').innerHTML = 'Enter your symptoms to get a potential diagnosis.';
+      document.getElementById('description-result').innerHTML = 'Detailed description will appear here.';
+      document.getElementById('precautions-result').innerHTML = 'Preventive measures will be listed here.';
+      document.getElementById('medications-result').innerHTML = 'Medication suggestions will appear here.';
+      document.getElementById('workout-result').innerHTML = 'Exercise recommendations will be provided here.';
+      document.getElementById('diet-result').innerHTML = 'Dietary advice will be provided here.';
+
 
       try {
         const response = await callGeminiAPI(age, gender, symptoms, medicalHistory);
 
-        document.getElementById('disease-result').innerHTML = response.disease || '—';
-        document.getElementById('description-result').innerHTML = response.description || '—';
-        document.getElementById('precautions-result').innerHTML = response.precautions || '—';
-        document.getElementById('medications-result').innerHTML = response.medications || '—';
-        document.getElementById('workout-result').innerHTML = response.workout || '—';
-        document.getElementById('diet-result').innerHTML = response.diet || '—';
+        // Update results with actual data or keep placeholders if empty
+        document.getElementById('disease-result').innerHTML = response.disease || 'No specific disease identified based on symptoms.';
+        document.getElementById('description-result').innerHTML = response.description || 'No detailed description available.';
+        document.getElementById('precautions-result').innerHTML = response.precautions || 'No specific precautions suggested.';
+        document.getElementById('medications-result').innerHTML = response.medications || 'No specific medications suggested.';
+        document.getElementById('workout-result').innerHTML = response.workout || 'No specific workout recommendations.';
+        document.getElementById('diet-result').innerHTML = response.diet || 'No specific dietary recommendations.';
 
         document.getElementById('results').style.display = 'block';
       } catch (err) {
         alert("Error: " + err.message + "\nCheck console for details.");
         console.error(err);
+        // If error, display default placeholders in results section
+        document.getElementById('results').style.display = 'block'; 
       } finally {
         document.getElementById('loader').style.display = 'none';
       }
@@ -352,7 +475,7 @@
 
     async function callGeminiAPI(age, gender, symptoms, medicalHistory) {
       const apiKey = "AIzaSyAJXz6E8Yi2KFXeMlZp_DPkf0a9oNo2qhw";  // <--- Replace with your Gemini API key
-      const model = "gemini-2.5-flash";
+      const model = "gemini-2.5-flash"; // Or 'gemini-pro' for more robust answers
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
       const prompt = `As a medical assistant, provide recommendations for a ${age}-year-old ${gender} with these symptoms: ${symptoms}. Medical history: ${medicalHistory || 'None'}.
@@ -382,9 +505,10 @@ Return only valid JSON with keys: disease, description, precautions, medications
       try {
         return JSON.parse(aiText.trim());
       } catch {
+        // Fallback for malformed JSON, try to extract some info
         return { 
           disease: "Analysis incomplete.", 
-          description: "Could not parse detailed recommendations. Please try again with more specific symptoms.", 
+          description: aiText || "Could not parse detailed recommendations. Please try again with more specific symptoms.", 
           precautions: "—", 
           medications: "—", 
           workout: "—", 
