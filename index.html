@@ -1,439 +1,397 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediGuide - AI Medical Recommendation System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            text-align: center;
-            padding: 30px 0;
-            background: linear-gradient(120deg, #2c7da0, #a9d6e5);
-            color: white;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-        
-        header p {
-            font-size: 1.1rem;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .main-content {
-            display: flex;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-        
-        .input-section {
-            flex: 1;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .input-section h2 {
-            color: #2c7da0;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e4efe9;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #2c7da0;
-        }
-        
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 1rem;
-        }
-        
-        .form-group textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-        
-        button {
-            background: #2c7da0;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 500;
-            transition: background 0.3s;
-        }
-        
-        button:hover {
-            background: #1a5d7a;
-        }
-        
-        .results-section {
-            flex: 1;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .results-section h2 {
-            color: #2c7da0;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e4efe9;
-        }
-        
-        .result-category {
-            margin-bottom: 25px;
-        }
-        
-        .result-category h3 {
-            color: #2c7da0;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .result-category h3 span.icon {
-            margin-right: 10px;
-            font-size: 1.2rem;
-        }
-        
-        .result-content {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
-            border-left: 4px solid #2c7da0;
-        }
-        
-        .loader {
-            display: none;
-            text-align: center;
-            padding: 20px;
-        }
-        
-        .loader .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #2c7da0;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .disclaimer {
-            background: #fff3cd;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 30px;
-            border-left: 4px solid #ffc107;
-        }
-        
-        .disclaimer h3 {
-            color: #856404;
-            margin-bottom: 10px;
-        }
-        
-        footer {
-            text-align: center;
-            padding: 20px;
-            margin-top: 30px;
-            color: #6c757d;
-            font-size: 0.9rem;
-        }
-        
-        @media (max-width: 900px) {
-            .main-content {
-                flex-direction: column;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medical Recommendation System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --main-bg-color: #f1f5f8;
+      --card-bg-color: #ffffff;
+      --card-alt-bg-color: #f6f8fb;
+      --primary-color: #2c3e50;
+      --secondary-color: #3498db;
+      --text-color: #555;
+      --heading-color: #2c3e50;
+      --border-color: #e0e0e0;
+      --shadow-color: rgba(0, 0, 0, 0.08);
+      --font-family: 'Roboto', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--main-bg-color);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Header Section */
+    .header {
+      width: 100%;
+      background: linear-gradient(90deg, #3498db, #2980b9);
+      color: white;
+      text-align: center;
+      padding: 60px 20px 40px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: 1px;
+    }
+
+    .header p {
+      font-size: 1rem;
+      font-weight: 400;
+      margin-top: 5px;
+      opacity: 0.9;
+    }
+
+    /* Main Content Wrapper */
+    .container-wrapper {
+      max-width: 850px;
+      width: 100%;
+      padding: 30px 20px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    /* Card Styling */
+    .card {
+      background-color: var(--card-bg-color);
+      border-radius: 10px;
+      box-shadow: 0 4px 15px var(--shadow-color);
+      padding: 30px;
+    }
+
+    .card h2 {
+      color: var(--heading-color);
+      font-size: 1.5rem;
+      font-weight: 500;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 10px;
+      margin-top: 0;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--heading-color);
+      margin-top: 15px;
+      margin-bottom: 5px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      font-family: var(--font-family);
+      font-size: 1rem;
+      color: var(--text-color);
+      background-color: var(--card-alt-bg-color);
+      box-sizing: border-box;
+      transition: all 0.2s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--secondary-color);
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    }
+
+    select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%232c3e50%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13%205.1L146.2%20268.4%2018.6%2074.5a17.6%2017.6%200%200%200-25.3-24.5c-6.1%206.1-7.7%2016.9-3.4%2024.5l130%20165.7c4.6%205.8%2013%205.8%2017.6%200l130-165.7c4.3-7.6%202.7-18.4-3.4-24.5-5.6-5.6-14.1-6.1-20.2-.5z%22%2F%3E%3C%2Fsvg%3E');
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 10px;
+      padding-right: 30px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: var(--secondary-color);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 25px;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+    
+    #loader {
+        display: none;
+        text-align: center;
+        margin-top: 20px;
+        font-size: 1rem;
+        color: var(--secondary-color);
+        font-weight: 500;
+    }
+
+    /* Recommendations Card */
+    .recommendations-card {
+        padding: 30px;
+    }
+
+    .recommendations-card .item {
+      display: flex;
+      gap: 15px;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      background-color: var(--card-alt-bg-color);
+    }
+    
+    .recommendations-card .item:last-child {
+        margin-bottom: 0;
+    }
+
+    .recommendations-card .icon {
+      font-size: 1.5rem;
+      line-height: 1;
+      color: var(--secondary-color);
+    }
+
+    .recommendations-card .content {
+      flex-grow: 1;
+    }
+
+    .recommendations-card h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--heading-color);
+      margin: 0 0 5px 0;
+    }
+
+    .recommendations-card .content div {
+      font-size: 0.9rem;
+      color: var(--text-color);
+      line-height: 1.5;
+    }
+
+    /* Disclaimer Section */
+    .disclaimer-card {
+      background-color: #fef4e5;
+      border: 1px solid #fce8c0;
+      color: #9c6c2b;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    
+    .disclaimer-card h3 {
+        color: #9c6c2b;
+        margin: 0 0 10px 0;
+        font-size: 1rem;
+        font-weight: 700;
+    }
+
+    /* Mobile adjustments */
+    @media (min-width: 768px) {
+      .container-wrapper {
+        grid-template-columns: 1fr 1fr;
+      }
+      .disclaimer-card, #loader {
+        grid-column: 1 / 3;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>MediGuide AI</h1>
-            <p>Get personalized medical recommendations based on your symptoms</p>
-        </header>
+  <div class="header">
+    <h1>MediGuide AI</h1>
+    <p>Your AI-powered health assistant</p>
+  </div>
+
+  <div class="container-wrapper">
+    <div class="card" id="symptom-card">
+      <h2>Enter Your Symptoms</h2>
+      <form id="symptom-form">
+        <label for="age">Age</label>
+        <input type="number" id="age" required>
         
-        <div class="main-content">
-            <div class="input-section">
-                <h2>Enter Your Symptoms</h2>
-                <form id="symptom-form">
-                    <div class="form-group">
-                        <label for="age">Age</label>
-                        <input type="number" id="age" min="1" max="120" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="gender">Gender</label>
-                        <select id="gender" required>
-                            <option value="">Select Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="symptoms">Symptoms (describe in detail)</label>
-                        <textarea id="symptoms" placeholder="Describe your symptoms, their duration, severity, and any other relevant information" required></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="medical-history">Medical History (optional)</label>
-                        <textarea id="medical-history" placeholder="Any existing medical conditions, allergies, or current medications"></textarea>
-                    </div>
-                    
-                    <button type="submit">Get Recommendations</button>
-                </form>
-            </div>
-            
-            <div class="results-section">
-                <h2>Recommendations</h2>
-                <div class="loader" id="loader">
-                    <div class="spinner"></div>
-                    <p>Analyzing your symptoms with AI...</p>
-                </div>
-                
-                <div id="results">
-                    <div class="result-category">
-                        <h3><span class="icon">🦠</span> Disease</h3>
-                        <div class="result-content" id="disease-result">
-                            <p>Enter your symptoms to get a potential diagnosis.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="result-category">
-                        <h3><span class="icon">📝</span> Description</h3>
-                        <div class="result-content" id="description-result">
-                            <p>Detailed description will appear here.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="result-category">
-                        <h3><span class="icon">🛡️</span> Precautions</h3>
-                        <div class="result-content" id="precautions-result">
-                            <p>Preventive measures will be listed here.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="result-category">
-                        <h3><span class="icon">💊</span> Medications</h3>
-                        <div class="result-content" id="medications-result">
-                            <p>Medication suggestions will appear here.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="result-category">
-                        <h3><span class="icon">💪</span> Workout</h3>
-                        <div class="result-content" id="workout-result">
-                            <p>Exercise recommendations will be provided here.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="result-category">
-                        <h3><span class="icon">🍎</span> Diet</h3>
-                        <div class="result-content" id="diet-result">
-                            <p>Dietary advice will be provided here.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <label for="gender">Gender</label>
+        <select id="gender" required>
+          <option value="">Select Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+        </select>
         
-        <div class="disclaimer">
-            <h3>Important Disclaimer</h3>
-            <p>This tool provides AI-generated recommendations based on the information you provide. It is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition. Never disregard professional medical advice or delay in seeking it because of something you have read on this website.</p>
-        </div>
+        <label for="symptoms">Symptoms (describe in detail)</label>
+        <textarea id="symptoms" rows="5" placeholder="e.g., persistent headache, mild fever, body aches for 3 days..." required></textarea>
         
-        <footer>
-            <p>MediGuide AI &copy; 2023 | For demonstration purposes only</p>
-        </footer>
+        <label for="medical-history">Medical History (optional)</label>
+        <textarea id="medical-history" rows="3" placeholder="e.g., previously diagnosed with asthma, no known allergies..."></textarea>
+        
+        <button type="submit">Get Recommendations</button>
+      </form>
     </div>
 
-    <script>
-        document.getElementById('symptom-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const age = document.getElementById('age').value;
-            const gender = document.getElementById('gender').value;
-            const symptoms = document.getElementById('symptoms').value;
-            const medicalHistory = document.getElementById('medical-history').value;
-            
-            // Show loader
-            document.getElementById('loader').style.display = 'block';
-            document.getElementById('results').style.opacity = '0.3';
-            
-            try {
-                // In a real implementation, you would call the Gemini API here
-                // For demonstration, we'll use a simulated response
-                
-                // Simulate API call delay
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                
-                // Simulated response (replace with actual API call)
-                const response = simulateGeminiResponse(age, gender, symptoms, medicalHistory);
-                
-                // Update the UI with the response
-                document.getElementById('disease-result').innerHTML = `<p>${response.disease}</p>`;
-                document.getElementById('description-result').innerHTML = `<p>${response.description}</p>`;
-                document.getElementById('precautions-result').innerHTML = `<p>${response.precautions}</p>`;
-                document.getElementById('medications-result').innerHTML = `<p>${response.medications}</p>`;
-                document.getElementById('workout-result').innerHTML = `<p>${response.workout}</p>`;
-                document.getElementById('diet-result').innerHTML = `<p>${response.diet}</p>`;
-                
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred while processing your request. Please try again.');
-            } finally {
-                // Hide loader
-                document.getElementById('loader').style.display = 'none';
-                document.getElementById('results').style.opacity = '1';
-            }
-        });
-        
-        // Function to simulate Gemini API response (replace with actual API call)
-        function simulateGeminiResponse(age, gender, symptoms, medicalHistory) {
-            // This is a simplified simulation - in a real implementation, 
-            // you would call the Gemini API with the provided API key
-            
-            // For now, we'll return example responses based on common symptoms
-            const symptomsLower = symptoms.toLowerCase();
-            
-            if (symptomsLower.includes('headache') || symptomsLower.includes('fever')) {
-                return {
-                    disease: "Common Cold or Flu",
-                    description: "Viral infection affecting the upper respiratory tract, often accompanied by headache, fever, and general malaise.",
-                    precautions: "Get plenty of rest, stay hydrated, wash hands frequently, avoid close contact with others to prevent spread.",
-                    medications: "Over-the-counter pain relievers (acetaminophen, ibuprofen), decongestants, or cough suppressants as needed. Consult a doctor if symptoms persist beyond 7 days.",
-                    workout: "Light activities like walking or gentle stretching if energy levels allow. Avoid intense exercise until recovered.",
-                    diet: "Warm fluids like soup or herbal tea, fruits rich in vitamin C, and easily digestible foods. Stay well-hydrated with water and electrolyte solutions."
-                };
-            } else if (symptomsLower.includes('cough') || symptomsLower.includes('chest')) {
-                return {
-                    disease: "Bronchitis or Respiratory Infection",
-                    description: "Inflammation of the bronchial tubes often caused by viral infections, resulting in coughing, chest discomfort, and sometimes mucus production.",
-                    precautions: "Avoid irritants like smoke and pollution, use a humidifier, practice good hand hygiene, and consider wearing a mask in dusty environments.",
-                    medications: "Cough suppressants, expectorants, or in some cases bronchodilators. Antibiotics only if bacterial infection is confirmed.",
-                    workout: "Light to moderate activity as tolerated. Avoid strenuous exercise that may trigger coughing fits.",
-                    diet: "Warm liquids like tea with honey, broth-based soups, and foods rich in antioxidants. Avoid dairy if it seems to increase mucus production."
-                };
-            } else if (symptomsLower.includes('joint') || symptomsLower.includes('pain')) {
-                return {
-                    disease: "Possible Arthritis or Musculoskeletal Strain",
-                    description: "Inflammation or wear-and-tear of joints causing pain, stiffness, and reduced range of motion.",
-                    precautions: "Avoid overexertion, use proper body mechanics, apply heat or cold therapy, and maintain a healthy weight to reduce joint stress.",
-                    medications: "Over-the-counter anti-inflammatories (ibuprofen, naproxen), topical pain relievers, or consult doctor for prescription options.",
-                    workout: "Low-impact exercises like swimming, cycling, or yoga. Focus on range-of-motion exercises and strength training around affected joints.",
-                    diet: "Anti-inflammatory foods like fatty fish, nuts, berries, and leafy greens. Consider reducing processed foods and sugars which may increase inflammation."
-                };
-            } else {
-                // Generic response for other symptoms
-                return {
-                    disease: "Based on your symptoms, further evaluation is recommended",
-                    description: "Your symptoms could be related to various conditions. It's important to consult with a healthcare professional for an accurate diagnosis.",
-                    precautions: "Monitor your symptoms, maintain good hygiene practices, stay hydrated, and avoid known triggers if identified.",
-                    medications: "Over-the-counter symptom relief may be appropriate depending on your specific symptoms. Consult a pharmacist or doctor for recommendations.",
-                    workout: "Moderate activity as tolerated. Listen to your body and rest when needed.",
-                    diet: "Balanced nutrition with emphasis on whole foods, fruits, vegetables, and adequate protein. Stay well-hydrated with water."
-                };
-            }
-        }
-        
-        // Example of how to call the actual Gemini API (commented out for now)
-        /*
-        async function callGeminiAPI(age, gender, symptoms, medicalHistory) {
-            const apiKey = 'AIzaSyAJXz6E8Yi2KFXeMlZp_DPkf0a9oNo2qhw';
-            const url = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${apiKey}`;
-            
-            const prompt = `As a medical assistant, provide recommendations for:
-            - Potential disease/condition
-            - Description
-            - Precautions
-            - Medications (over-the-counter and prescription)
-            - Workout recommendations
-            - Diet advice
-            
-            For a ${age}-year-old ${gender} with these symptoms: ${symptoms}.
-            Medical history: ${medicalHistory || 'None provided'}.
-            
-            Format the response as a JSON object with these keys: disease, description, precautions, medications, workout, diet.`;
-            
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: prompt
-                            }]
-                        }]
-                    })
-                });
-                
-                const data = await response.json();
-                // Process the response and extract the JSON object
-                // This would need to be adapted based on the actual API response format
-                return JSON.parse(data.candidates[0].content.parts[0].text);
-            } catch (error) {
-                console.error('Error calling Gemini API:', error);
-                throw error;
-            }
-        }
-        */
-    </script>
+    <div id="results" class="card recommendations-card" style="display:none;">
+      <h2>Recommendations</h2>
+      
+      <div class="item">
+        <div class="icon">🩺</div>
+        <div class="content">
+          <h3>Disease</h3>
+          <div id="disease-result"></div>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="icon">💬</div>
+        <div class="content">
+          <h3>Description</h3>
+          <div id="description-result"></div>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="icon">🛡️</div>
+        <div class="content">
+          <h3>Precautions</h3>
+          <div id="precautions-result"></div>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="icon">💊</div>
+        <div class="content">
+          <h3>Medications</h3>
+          <div id="medications-result"></div>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="icon">💪</div>
+        <div class="content">
+          <h3>Workout</h3>
+          <div id="workout-result"></div>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="icon">🥗</div>
+        <div class="content">
+          <h3>Diet</h3>
+          <div id="diet-result"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="loader">Analyzing symptoms...</div>
+
+    <div class="disclaimer-card">
+      <h3>Disclaimer</h3>
+      <p>This information is for educational purposes only and is not a substitute for professional medical advice. Always consult with a qualified healthcare provider for any health concerns. Do not disregard or delay professional medical advice based on what you read here.</p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('symptom-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const age = document.getElementById('age').value;
+      const gender = document.getElementById('gender').value;
+      const symptoms = document.getElementById('symptoms').value;
+      const medicalHistory = document.getElementById('medical-history').value;
+
+      document.getElementById('loader').style.display = 'block';
+      document.getElementById('results').style.display = 'none';
+
+      // Set initial placeholder text in the results card before the API call
+      document.getElementById('disease-result').innerHTML = '—';
+      document.getElementById('description-result').innerHTML = '—';
+      document.getElementById('precautions-result').innerHTML = '—';
+      document.getElementById('medications-result').innerHTML = '—';
+      document.getElementById('workout-result').innerHTML = '—';
+      document.getElementById('diet-result').innerHTML = '—';
+
+      try {
+        const response = await callGeminiAPI(age, gender, symptoms, medicalHistory);
+
+        document.getElementById('disease-result').innerHTML = response.disease || '—';
+        document.getElementById('description-result').innerHTML = response.description || '—';
+        document.getElementById('precautions-result').innerHTML = response.precautions || '—';
+        document.getElementById('medications-result').innerHTML = response.medications || '—';
+        document.getElementById('workout-result').innerHTML = response.workout || '—';
+        document.getElementById('diet-result').innerHTML = response.diet || '—';
+
+        document.getElementById('results').style.display = 'block';
+      } catch (err) {
+        alert("Error: " + err.message + "\nCheck console for details.");
+        console.error(err);
+      } finally {
+        document.getElementById('loader').style.display = 'none';
+      }
+    });
+
+    async function callGeminiAPI(age, gender, symptoms, medicalHistory) {
+      const apiKey = "AIzaSyAJXz6E8Yi2KFXeMlZp_DPkf0a9oNo2qhw";  // <--- Replace with your Gemini API key
+      const model = "gemini-2.5-flash";
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
+      const prompt = `As a medical assistant, provide recommendations for a ${age}-year-old ${gender} with these symptoms: ${symptoms}. Medical history: ${medicalHistory || 'None'}.
+Return only valid JSON with keys: disease, description, precautions, medications, workout, diet.`;
+
+      const body = {
+        contents: [{ parts: [{ text: prompt }]}],
+        generationConfig: { responseMimeType: "application/json" }
+      };
+
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+
+      const data = await res.json();
+      console.log("Full API response:", data);
+
+      if (!res.ok) {
+        throw new Error(data.error?.message || "API Error");
+      }
+
+      let aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!aiText) throw new Error("No text returned by AI.");
+
+      try {
+        return JSON.parse(aiText.trim());
+      } catch {
+        return { 
+          disease: "Analysis incomplete.", 
+          description: "Could not parse detailed recommendations. Please try again with more specific symptoms.", 
+          precautions: "—", 
+          medications: "—", 
+          workout: "—", 
+          diet: "—" 
+        };
+      }
+    }
+  </script>
 </body>
 </html>
