@@ -1,689 +1,972 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MediGuide - AI Medical Assistant</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <style>
-    :root {
-      --header-bg-start: #0B6653; /* LIGHT GREEN */
-      --header-bg-end: #01796F;   /* DARK GREEN */
-      --primary-text-color: #1a1a2e;
-      --secondary-text-color: #777;
-      --light-bg: #f0f4f8; /* A cool, light blue-gray */
-      --card-bg: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
-      --card-border: rgba(255, 255, 255, 0.18); /* Semi-transparent border */
-      --accent-color: #4A90E2;
-      --accent-hover: #3a7bd5;
-      --shadow-light: 0 8px 32px 0 rgba(31, 38, 135, 0.37); /* Glassmorphism shadow */
-      --border-radius: 20px;
-    }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: var(--light-bg);
-      background-image: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
-      color: var(--primary-text-color);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      box-sizing: border-box;
-      position: relative;
-    }
-
-    /* Background Circles for visual flair */
-    .bg-circle-1 {
-      position: absolute;
-      width: 300px;
-      height: 300px;
-      background: rgba(74, 144, 226, 0.3);
-      border-radius: 50%;
-      top: 5%;
-      left: -10%;
-      filter: blur(150px);
-      z-index: -1;
-    }
-    .bg-circle-2 {
-      position: absolute;
-      width: 400px;
-      height: 400px;
-      background: rgba(106, 17, 203, 0.3);
-      border-radius: 50%;
-      bottom: -0%;
-      right: -0%;
-      filter: blur(150px);
-      z-index: -1;
-    }
-
-    /* Header section */
-    .header {
-      width: 100%;
-      background: linear-gradient(to right, var(--header-bg-start), var(--header-bg-end));
-      color: white;
-      text-align: center;
-      padding: 60px 20px;
-      box-shadow: var(--shadow-light);
-      box-sizing: border-box;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .header-logo {
-      width: 80px;
-      height: auto;
-      margin-bottom: 10px;
-      filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
-    }
-
-    .header h1 {
-      margin: 0;
-      font-size: 3.2em;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    .header p {
-      font-size: 1.3em;
-      margin-top: 5px;
-      opacity: 0.9;
-      max-width: 650px;
-      margin-left: auto;
-      margin-right: auto;
-      line-height: 1.5;
-    }
-
-    /* Main content container for form and results */
-    .content-wrapper {
-      width: 100%;
-      max-width: 900px;
-      padding: 0 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 40px;
-      box-sizing: border-box;
-      margin-top: -30px; /* Overlap with header for a sleek look */
-      z-index: 10;
-    }
-
-    /* Card styling - Glassmorphism */
-    .card {
-      background: var(--card-bg);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-radius: var(--border-radius);
-      border: 1px solid var(--card-border);
-      box-shadow: var(--shadow-light);
-      padding: 40px;
-      width: 100%;
-      box-sizing: border-box;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 40px 0 rgba(31, 38, 135, 0.45);
-    }
-
-    .card h2 {
-      font-size: 1.8em;
-      color: var(--primary-text-color);
-      margin-bottom: 25px;
-      text-align: center;
-      font-weight: 600;
-    }
-
-    /* Tabbed Symptom Section */
-    .tab-container {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap; /* Added for better mobile responsiveness */
-        margin-bottom: 20px;
-        gap: 10px;
-    }
-    .tab-button {
-        padding: 12px 25px;
-        border: none;
-        background-color: rgba(255, 255, 255, 0.5);
-        border-radius: 50px;
-        color: var(--primary-text-color);
-        font-weight: 500;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.2s;
-        font-size: 0.9em;
-    }
-    .tab-button.active, .tab-button:hover {
-        background-color: #01796F;
-        color: white;
-        transform: translateY(-2px);
-    }
-
-    .tab-content {
-        display: none;
-    }
-    .tab-content.active {
-        display: block;
-    }
-
-    .suggestion-buttons {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 15px;
-    }
-    .suggestion-button {
-        padding: 8px 15px;
-        border: 1px solid #01796F;
-        border-radius: 20px;
-        background-color: transparent;
-        color: var(--accent-color); 
-        color: #01796F;
-        font-size: 0.9em;
-        font-weight: 500;
-    
-        cursor: pointer;
-        transition: background-color 0.3s, color 0.3s, transform 0.2s;
-    }
-    .suggestion-button:hover {
-        background-color: #01796F;
-        color: white;
-        transform: scale(1.05);
-    }
-
-    label {
-      display: block;
-      font-weight: 600;
-      margin-top: 25px;
-      margin-bottom: 8px;
-      color: var(--primary-text-color);
-      font-size: 0.95em;
-    }
-
-      input, textarea, select {
-      width: 100%;
-      padding: 14px 20px;
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      font-size: 1em;
-      color: var(--primary-text-color);
-      box-sizing: border-box;
-      background: rgba(255, 255, 255, 0.4);
-      border-color: var(--accent-color);
-      box-shadow: 3px rgba(41, 171, 135, 0.2);
-      outline: none;
-      transition: border-color 0.3s, box-shadow 0.3s;
-      resize: vertical;
-    }
-
-    input:focus, textarea:focus, select:focus {
-      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-    }
-
-
-    select {
-      appearance: none;
-      background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%234A90E2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13%205.1L146.2%20268.4%2018.6%2074.5a17.6%2017.6%200%200%200-25.3-24.5c-6.1%206.1-7.7%2016.9-3.4%2024.5l130%20165.7c4.6%205.8%2013%205.8%2017.6%200l130-165.7c4.3-7.6%202.7-18.4-3.4-24.5-5.6-5.6-14.1-6.1-20.2-.5z%22%2F%3E%3C%2Fsvg%3E');
-      background-repeat: no-repeat;
-      background-position: right 20px center;
-      background-size: 15px;
-      padding-right: 40px;
-    }
-
-    button[type="submit"] {
-      display: block;
-      width: fit-content;
-      margin: 40px auto 0 auto;
-      padding: 16px 40px;
-      background-color: #01796F;
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 1.1em;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    button[type="submit"]:hover {
-      background-color: #043927;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Loader styling */
-    #loader {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      margin: 30px 0;
-      font-size: 1.2em;
-      color: #01796F;
-      font-weight: 600;
-    }
-    
-    #loader p {
-        margin-top: 10px;
-        animation: pulseText 1.5s infinite ease-in-out;
-    }
-
-    /* FIX: Custom spinner animation */
-    @keyframes custom-spin {
-        from {
-            transform: rotate(0deg);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediGuide - AI Medical Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root {
+            --header-bg-start: #0B6653;
+            /* LIGHT GREEN */
+            --header-bg-end: #01796F;
+            /* DARK GREEN */
+            --primary-text-color: #1a1a2e;
+            --secondary-text-color: #777;
+            --light-bg: #f0f4f8;
+            /* A cool, light blue-gray */
+            --card-bg: rgba(255, 255, 255, 0.2);
+            /* Semi-transparent white */
+            --card-border: rgba(255, 255, 255, 0.18);
+            /* Semi-transparent border */
+            --accent-color: #ffffff;
+            --accent-hover: #3a7bd5;
+            --shadow-light: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            /* Glassmorphism shadow */
+            --border-radius: 20px;
+            --nav-bg: #01796F;
         }
-        to {
-            transform: rotate(360deg);
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding-bottom: 70px;
+            /* Add padding for the fixed navigation bar */
+            background-color: var(--light-bg);
+            background-image: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+            color: var(--primary-text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+            position: relative;
         }
-    }
 
-    #loader .fas.fa-spinner {
-        animation: custom-spin 1.5s linear infinite;
-    }
+        /* Background Circles for visual flair */
+        .bg-circle-1 {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(74, 144, 226, 0.3);
+            border-radius: 50%;
+            top: 5%;
+            left: -10%;
+            filter: blur(150px);
+            z-index: -1;
+        }
 
-    @keyframes pulseText {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.6; }
-    }
+        .bg-circle-2 {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(106, 17, 203, 0.3);
+            border-radius: 50%;
+            bottom: -0%;
+            right: -0%;
+            filter: blur(150px);
+            z-index: -1;
+        }
 
-    /* Recommendations Section */
-    .recommendations-section {
-      background: var(--card-bg);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-radius: var(--border-radius);
-      border: 1px solid var(--card-border);
-      box-shadow: var(--shadow-light);
-      padding: 40px;
-      width: 100%;
-      box-sizing: border-box;
-      display: none; /* Initially hidden */
-    }
+        /* Header section */
+        .header {
+            width: 100%;
+            background: linear-gradient(to right, var(--header-bg-start), var(--header-bg-end));
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+            box-shadow: var(--shadow-light);
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+        }
 
-    .recommendations-section h2 {
-      text-align: center;
-    }
+        .header-logo {
+            width: 80px;
+            height: auto;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+        }
 
-    .recommendations-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 25px;
-      margin-top: 30px;
-    }
+        .header h1 {
+            margin: 0;
+            font-size: 3.2em;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
 
-    .recommendations-grid .item {
-      background-color: rgba(255, 255, 255, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      border-radius: 15px;
-      padding: 25px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      transition: transform 0.3s ease, background-color 0.3s;
-    }
+        .header p {
+            font-size: 1.3em;
+            margin-top: 5px;
+            opacity: 0.9;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.5;
+        }
 
-    .recommendations-grid .item:hover {
-        transform: translateY(-5px);
-        background-color: rgba(255, 255, 255, 0.4);
-    }
+        /* Main content container for form and results */
+        .content-wrapper {
+            width: 100%;
+            max-width: 900px;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            box-sizing: border-box;
+            margin-top: -30px;
+            /* Overlap with header for a sleek look */
+            z-index: 10;
+        }
 
-    .recommendations-grid .item .icon {
-      font-size: 2.5em;
-      margin-bottom: 15px;
-      color: #01796F;
-    }
+        /* Card styling - Glassmorphism */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow-light);
+            padding: 40px;
+            width: 100%;
+            box-sizing: border-box;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
-    .recommendations-grid .item h3 {
-      font-size: 1.3em;
-      font-weight: 600;
-      color: #01796F;
-      margin: 0 0 10px 0;
-    }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px 0 rgba(31, 38, 135, 0.45);
+        }
 
-    .recommendations-grid .item div {
-      font-size: 0.95em;
-      color: #043927;
-      line-height: 1.6;
-      word-wrap: break-word;
-    }
+        .card h2 {
+            font-size: 1.8em;
+            color: var(--primary-text-color);
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+        }
 
-    /* Disclaimer Section */
-    .disclaimer-card {
-      background: rgba(255, 243, 205, 0.5);
-      border: 1px solid rgba(255, 238, 186, 0.5);
-      color: #856404;
-      border-radius: var(--border-radius);
-      padding: 30px;
-      margin-top: 40px;
-      margin-bottom: 50px;
-      max-width: 900px;
-      width: 100%;
-      box-shadow: var(--shadow-light);
-      box-sizing: border-box;
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
-    }
+        /* Tabbed Symptom Section */
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            /* Added for better mobile responsiveness */
+            margin-bottom: 20px;
+            gap: 10px;
+        }
 
-    .disclaimer-card h3 {
-      font-size: 1.3em;
-      font-weight: 700;
-      color: #856404;
-      margin-top: 0;
-      margin-bottom: 15px;
-      text-align: center;
-    }
+        .tab-button {
+            padding: 12px 25px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50px;
+            color: var(--primary-text-color);
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            font-size: 0.9em;
+        }
 
-    .disclaimer-card p {
-      font-size: 0.9em;
-      line-height: 1.6;
-      text-align: justify;
-    }
+        .tab-button.active,
+        .tab-button:hover {
+            background-color: #01796F;
+            color: white;
+            transform: translateY(-2px);
+        }
 
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .header {
-        padding: 50px 15px;
-      }
-      .header h1 {
-        font-size: 2.5em;
-      }
-      .header p {
-        font-size: 1.1em;
-      }
-      .content-wrapper {
-        padding: 0 15px;
-      }
-      .card {
-        padding: 30px;
-      }
-      .card h2 {
-        font-size: 1.6em;
-      }
-      .recommendations-grid {
-        grid-template-columns: 1fr;
-      }
-      .tab-button {
-          
-          padding: 10px 20px;
-          font-size: 0.85em;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="bg-circle-1"></div>
-  <div class="bg-circle-2"></div>
+        .tab-content {
+            display: none;
+        }
 
-  <div class="header">
-    <img src="https://res.cloudinary.com/dowhvdkjh/image/upload/v1758017228/image_puig4p.png" alt="MediGuide AI Logo" class="header-logo">
-    <h1>MediGuide</h1>
-    <p>Get personalized medical recommendations based on your symptoms.</p>
-  </div>
+        .tab-content.active {
+            display: block;
+        }
 
-  <div class="content-wrapper">
-    <div class="card" id="form-card">
-      <h2>Enter Your Symptoms</h2>
-      <form id="symptom-form">
-        <label for="age">Age</label>
-        <input type="number" id="age" required>
-        
-        <label for="gender">Gender</label>
-        <select id="gender" required>
-          <option value="">Select Gender</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-          <option value="other">Other</option>
-        </select>
+        .suggestion-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
 
-        <label for="symptoms-tab">Symptom Description</label>
-        <div class="tab-container">
-            <button type="button" class="tab-button active" data-tab="tab-fever">Fever 🔥</button>
-            <button type="button" class="tab-button" data-tab="tab-headache">Headache 🤕</button>
-            <button type="button" class="tab-button" data-tab="tab-cough">Cough 🤧</button>
-        
-        </div>
+        .suggestion-button {
+            padding: 8px 15px;
+            border: 1px solid #01796F;
+            border-radius: 20px;
+            background-color: transparent;
+            color: var(--accent-color);
+            color: #01796F;
+            font-size: 0.9em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, transform 0.2s;
+        }
 
-        <div id="symptoms-tabs">
-            <div id="tab-fever" class="tab-content active">
-                <textarea id="symptoms-fever" rows="4" placeholder="Describe your fever symptoms (e.g., high temperature, chills, body aches)."></textarea>
-                <div class="suggestion-buttons">
-                    <button type="button" class="suggestion-button" onclick="addSymptom('symptoms-fever', 'High temperature')">High temperature</button>
-                    <button type="button" class="suggestion-button" onclick="addSymptom('symptoms-fever', 'Chills')">Chills</button>
-                    <button type="button" class="suggestion-button" onclick="addSymptom('symptoms-fever', 'Body aches')">Body aches</button>
-                    <button type="button" class="suggestion-button" onclick="addSymptom('symptoms-fever', 'Fatigue')">Fatigue</button>
-                </div>
-            </div>
-            <div id="tab-headache" class="tab-content">
-                <textarea id="symptoms-headache" rows="4" placeholder="Describe your headache symptoms (e.g., location, severity, duration)."></textarea>
-                <div class="suggestion-buttons">
-                    <button type="button" class="suggestion-button" onclick="addSymptom('symptoms-headache', 'Throbbing pain')">Throbbing pain</button>
-                    <button type="button" class="suggestion-button" onclick="addSymptom('symptoms-headache', 'Behind the eyes')">Behind the eyes</button>
-                    <button type="button" class="suggestion-button" onclick="addSymptom('symptoms-headache', 'Light sensitivity')">Light sensitivity</button>
-                    <button type="button" class="suggestion-button" onclick="addSymptom('symptoms-headache', 'Neck stiffness')">Neck stiffness</button>
-                </div>
-            </div>
-            <div id="tab-cough" class="tab-content">
-                <textarea id="symptoms-cough" rows="4" placeholder="Describe your cough symptoms (e.g., dry, wet, productive, with phlegm)."></textarea>
-                <div class="suggestion-buttons">
-                    <button type="button" class="suggestion-button" onclick="addSymptom('symptoms-cough', 'Dry cough')">Dry cough</button>
-                    <button type="button" class="suggestion-button" onclick="addSymptom('symptoms-cough', 'Cough with phlegm')">With phlegm</button>
-                    <button type="button" class="suggestion-button" onclick="addSymptom('symptoms-cough', 'Sore throat')">Sore throat</button>
-                    <button type="button" class="suggestion-button" onclick="addSymptom('symptoms-cough', 'Chest congestion')">Chest congestion</button>
-                </div>
-            </div>
-            <div id="tab-custom" class="tab-content">
-                <textarea id="symptoms-custom" rows="4" placeholder="Describe your symptoms in detail, including duration, severity, and any other relevant information."></textarea>
-            </div>
-        </div>
+        .suggestion-button:hover {
+            background-color: #01796F;
+            color: white;
+            transform: scale(1.05);
+        }
 
-        <label for="medical-history">Medical History (optional)</label>
-        <textarea id="medical-history" rows="3" placeholder="Any existing medical conditions, allergies, or current medications"></textarea>
-        
-        <button type="submit">Get Recommendations</button>
-      </form>
-    </div>
+        label {
+            display: block;
+            font-weight: 600;
+            margin-top: 25px;
+            margin-bottom: 8px;
+            color: var(--primary-text-color);
+            font-size: 0.95em;
+        }
 
-    <div id="loader">
-      <i class="fas fa-spinner fa-2x"></i>
-      <p>Analyzing your symptoms...</p>
-    </div>
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 14px 20px;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            font-size: 1em;
+            color: var(--primary-text-color);
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.4);
+            border-color: var(--accent-color);
+            box-shadow: 3px rgba(41, 171, 135, 0.2);
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            resize: vertical;
+        }
 
-    <div id="results" class="recommendations-section">
-      <h2>Recommendations</h2>
-      <div class="recommendations-grid">
-        <div class="item">
-          <div class="icon">
-            <i class="fas fa-microscope"></i>
-          </div>
-          <h3>Disease</h3>
-          <div id="disease-result">Enter your symptoms to get a potential diagnosis.</div>
-        </div>
+        input:focus,
+        textarea:focus,
+        select:focus {
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
 
-        <div class="item">
-          <div class="icon">
-            <i class="fas fa-file-medical-alt"></i>
-          </div>
-          <h3>Description</h3>
-          <div id="description-result">Detailed description will appear here.</div>
-        </div>
+        select {
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%234A90E2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13%205.1L146.2%20268.4%2018.6%2074.5a17.6%2017.6%200%200%200-25.3-24.5c-6.1%206.1-7.7%2016.9-3.4%2024.5l130%20165.7c4.6%205.8%2013%205.8%2017.6%200l130-165.7c4.3-7.6%202.7-18.4-3.4-24.5-5.6-5.6-14.1-6.1-20.2-.5z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+            background-size: 15px;
+            padding-right: 40px;
+        }
 
-        <div class="item">
-          <div class="icon">
-            <i class="fas fa-shield-alt"></i>
-          </div>
-          <h3>Precautions</h3>
-          <div id="precautions-result">Preventive measures will be listed here.</div>
-        </div>
+        button[type="submit"] {
+            display: block;
+            width: fit-content;
+            margin: 40px auto 0 auto;
+            padding: 16px 40px;
+            background-color: #01796F;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
 
-        <div class="item">
-          <div class="icon">
-            <i class="fas fa-pills"></i>
-          </div>
-          <h3>Medications</h3>
-          <div id="medications-result">Medication suggestions will appear here.</div>
-        </div>
+        button[type="submit"]:hover {
+            background-color: #043927;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
 
-        <div class="item">
-          <div class="icon">
-            <i class="fas fa-dumbbell"></i>
-          </div>
-          <h3>Workout</h3>
-          <div id="workout-result">Exercise recommendations will be provided here.</div>
-        </div>
+        /* Loader styling */
+        .loader-rec {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 1.2em;
+            color: #01796F;
+            font-weight: 600;
 
-        <div class="item">
-          <div class="icon">
-            <i class="fas fa-apple-alt"></i>
-          </div>
-          <h3>Diet</h3>
-          <div id="diet-result">Dietary advice will be provided here.</div>
-        </div>
-      </div>
-    </div>
-  </div>
+            transform: translateY(100px);
+            /* move down without breaking centering */
+        }
 
-  <div class="disclaimer-card">
-    <h3><i class="fas fa-exclamation-triangle"></i> Important Disclaimer</h3>
-    <p>This tool provides recommendations based on the information you provide. It is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition. Never disregard professional medical advice or delay in seeking it because of something you have read here.</p>
-  </div>
+        .loader-rec p {
+            margin-top: 10px;
+            animation: pulseText 1.5s infinite ease-in-out;
+        }
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const tabButtons = document.querySelectorAll('.tab-button');
-        const tabContents = document.querySelectorAll('.tab-content');
-        const form = document.getElementById('symptom-form');
-        const loader = document.getElementById('loader');
-        const resultsSection = document.getElementById('results');
-
-        // Tab functionality
-        tabButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const targetTab = button.getAttribute('data-tab');
-
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                tabContents.forEach(content => content.classList.remove('active'));
-
-                button.classList.add('active');
-                document.getElementById(targetTab).classList.add('active');
-            });
-        });
-
-        // Add suggestion text to textarea
-        window.addSymptom = function(textareaId, text) {
-            const textarea = document.getElementById(textareaId);
-            const currentText = textarea.value.trim();
-            if (currentText && !currentText.endsWith('.')) {
-                textarea.value = currentText + ', ' + text.toLowerCase();
-            } else {
-                textarea.value += text;
+        /* FIX: Custom spinner animation */
+        @keyframes custom-spin {
+            from {
+                transform: rotate(0deg);
             }
-            textarea.focus();
-        };
 
-        // Form submission
-        form.addEventListener('submit', async function(e) {
-          e.preventDefault();
-
-          const age = document.getElementById('age').value;
-          const gender = document.getElementById('gender').value;
-
-          // Get symptoms from the active tab
-          const activeTabContent = document.querySelector('.tab-content.active');
-          const symptomsTextarea = activeTabContent.querySelector('textarea');
-          const symptoms = symptomsTextarea.value;
-          
-          const medicalHistory = document.getElementById('medical-history').value;
-
-          loader.style.display = 'flex';
-          resultsSection.style.display = 'none';
-
-          // Reset results to placeholder text before new query
-          document.getElementById('disease-result').innerHTML = 'Analyzing...';
-          document.getElementById('description-result').innerHTML = 'Analyzing...';
-          document.getElementById('precautions-result').innerHTML = 'Analyzing...';
-          document.getElementById('medications-result').innerHTML = 'Analyzing...';
-          document.getElementById('workout-result').innerHTML = 'Analyzing...';
-          document.getElementById('diet-result').innerHTML = 'Analyzing...';
-
-
-          try {
-            const response = await callGeminiAPI(age, gender, symptoms, medicalHistory);
-
-            document.getElementById('disease-result').innerHTML = response.disease || 'No specific disease identified based on symptoms.';
-            document.getElementById('description-result').innerHTML = response.description || 'No detailed description available.';
-            document.getElementById('precautions-result').innerHTML = response.precautions || 'No specific precautions suggested.';
-            document.getElementById('medications-result').innerHTML = response.medications || 'No specific medications suggested.';
-            document.getElementById('workout-result').innerHTML = response.workout || 'No specific workout recommendations.';
-            document.getElementById('diet-result').innerHTML = response.diet || 'No specific dietary recommendations.';
-
-            resultsSection.style.display = 'block';
-          } catch (err) {
-            alert("Error: " + err.message + "\nCheck console for details.");
-            console.error(err);
-            resultsSection.style.display = 'block';
-            document.getElementById('disease-result').innerHTML = 'Error fetching data.';
-            document.getElementById('description-result').innerHTML = 'Please check your API key or try again later.';
-            document.getElementById('precautions-result').innerHTML = '';
-            document.getElementById('medications-result').innerHTML = '';
-            document.getElementById('workout-result').innerHTML = '';
-            document.getElementById('diet-result').innerHTML = '';
-          } finally {
-            loader.style.display = 'none';
-          }
-        });
-
-        async function callGeminiAPI(age, gender, symptoms, medicalHistory) {
-          const apiKey = "AIzaSyAJXz6E8Yi2KFXeMlZp_DPkf0a9oNo2qhw"; // REPLACE WITH YOUR API KEY
-          const model = "gemini-2.5-flash";
-          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-
-          const prompt = `As a medical assistant, provide recommendations for a ${age}-year-old ${gender} with these symptoms: ${symptoms}. Medical history: ${medicalHistory || 'None'}.
-Return only valid JSON with keys: disease, description, precautions, medications, workout, diet.`;
-
-          const body = {
-            contents: [{ parts: [{ text: prompt }]}],
-            generationConfig: { responseMimeType: "application/json" }
-          };
-
-          const res = await fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body)
-          });
-
-          const data = await res.json();
-          console.log("Full API response:", data);
-
-          if (!res.ok) {
-            throw new Error(data.error?.message || "API Error");
-          }
-
-          let aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (!aiText) throw new Error("No text returned by AI.");
-
-          try {
-            return JSON.parse(aiText.trim());
-          } catch {
-            return { 
-              disease: "Analysis incomplete.", 
-              description: aiText || "Could not parse detailed recommendations. Please try again with more specific symptoms.", 
-              precautions: "—", 
-              medications: "—", 
-              workout: "—", 
-              diet: "—" 
-            };
-          }
+            to {
+                transform: rotate(360deg);
+            }
         }
-    });
-  </script>
+
+        .loader-rec .fas.fa-spinner {
+            animation: custom-spin 1.5s linear infinite;
+        }
+
+        @keyframes pulseText {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        /* Recommendations Section */
+        .recommendations-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow-light);
+            padding: 40px;
+            width: 100%;
+            box-sizing: border-box;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .recommendations-section h2 {
+            text-align: center;
+        }
+
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .recommendations-grid .item {
+            background-color: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.3s ease, background-color 0.3s;
+        }
+
+        .recommendations-grid .item:hover {
+            transform: translateY(-5px);
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .recommendations-grid .item .icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            color: #01796F;
+        }
+
+        .recommendations-grid .item h3 {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #01796F;
+            margin: 0 0 10px 0;
+        }
+
+        .recommendations-grid .item div {
+            font-size: 0.95em;
+            color: #043927;
+            line-height: 1.6;
+            word-wrap: break-word;
+        }
+
+        /* Disclaimer Section */
+        .disclaimer-card {
+            background: rgba(255, 243, 205, 0.5);
+            border: 1px solid rgba(255, 238, 186, 0.5);
+            color: #856404;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-top: 40px;
+            margin-bottom: 50px;
+            max-width: 900px;
+            width: 100%;
+            box-shadow: var(--shadow-light);
+            box-sizing: border-box;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .disclaimer-card h3 {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #856404;
+            margin-top: 0;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .disclaimer-card p {
+            font-size: 0.9em;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        /* New Navigation Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--nav-bg);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #abf6e7;
+            text-decoration: none;
+            font-size: 0.8em;
+            padding: 5px;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--accent-color);
+        }
+
+        .nav-item i {
+            font-size: 1.3em;
+            /* Smaller icon size */
+            margin-bottom: 3px;
+        }
+
+        /* Login Page Styling */
+        .login-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow-light);
+            margin: 40px auto;
+            /* Use auto margin for proper centering */
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+        }
+
+        .login-card form {
+            width: 100%;
+        }
+
+        .login-card input[type="text"],
+        .login-card input[type="password"] {
+            margin-bottom: 15px;
+        }
+
+        .login-card button {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .login-message {
+            margin-top: 15px;
+            font-size: 1em;
+            color: #01796F;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .logout-button {
+            background-color: #d9534f;
+            width: auto;
+            margin-top: 10px;
+        }
+
+        .logout-button:hover {
+            background-color: #c9302c;
+        }
+
+        /* New styles for logged-in state */
+        .welcome-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            text-align: center;
+        }
+
+        .welcome-container .profile-icon {
+            font-size: 4em;
+            color: #01796F;
+        }
+
+        .welcome-container h3 {
+            font-size: 1.5em;
+            margin: 0;
+        }
+
+        .welcome-container p {
+            margin: 0;
+            color: var(--secondary-text-color);
+        }
+
+        /* New style for centering pages */
+        .page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 150px);
+            /* Adjusts for header and nav bar */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header {
+                padding: 50px 15px;
+            }
+
+            .header h1 {
+                font-size: 2.5em;
+            }
+
+            .header p {
+                font-size: 1.1em;
+            }
+
+            .content-wrapper {
+                padding: 0 15px;
+            }
+
+            .card {
+                padding: 30px;
+            }
+
+            .card h2 {
+                font-size: 1.6em;
+            }
+
+            .recommendations-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tab-button {
+                padding: 10px 20px;
+                font-size: 0.85em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-circle-1"></div>
+    <div class="bg-circle-2"></div>
+
+    <div class="header">
+        <img src="https://res.cloudinary.com/dowhvdkjh/image/upload/v1758017228/image_puig4p.png"
+            alt="MediGuide AI Logo" class="header-logo">
+        <h1>MediGuide</h1>
+        <p>Get personalized medical recommendations based on your symptoms.</p>
+    </div>
+
+    <div id="home-page" class="page active">
+        <div class="content-wrapper">
+            <div class="card" id="form-card">
+                <h2>Enter Your Symptoms</h2>
+                <form id="symptom-form">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" required>
+
+                    <label for="gender">Gender</label>
+                    <select id="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+
+                    <label for="symptoms-tab">Symptom Description</label>
+                    <div class="tab-container">
+                        <button type="button" class="tab-button active" data-tab="tab-fever">Fever 🔥</button>
+                        <button type="button" class="tab-button" data-tab="tab-headache">Headache 🤕</button>
+                        <button type="button" class="tab-button" data-tab="tab-cough">Cough 🤧</button>
+                    </div>
+
+                    <div id="symptoms-tabs">
+                        <div id="tab-fever" class="tab-content active">
+                            <textarea id="symptoms-fever" rows="4"
+                                placeholder="Describe your fever symptoms (e.g., high temperature, chills, body aches)."></textarea>
+                            <div class="suggestion-buttons">
+                                <button type="button" class="suggestion-button"
+                                    onclick="addSymptom('symptoms-fever', 'High temperature')">High temperature</button>
+                                <button type="button" class="suggestion-button"
+                                    onclick="addSymptom('symptoms-fever', 'Chills')">Chills</button>
+                                <button type="button" class="suggestion-button"
+                                    onclick="addSymptom('symptoms-fever', 'Body aches')">Body aches</button>
+                                <button type="button" class="suggestion-button"
+                                    onclick="addSymptom('symptoms-fever', 'Fatigue')">Fatigue</button>
+                            </div>
+                        </div>
+                        <div id="tab-headache" class="tab-content">
+                            <textarea id="symptoms-headache" rows="4"
+                                placeholder="Describe your headache symptoms (e.g., location, severity, duration)."></textarea>
+                            <div class="suggestion-buttons">
+                                <button type="button" class="suggestion-button"
+                                    onclick="addSymptom('symptoms-headache', 'Throbbing pain')">Throbbing pain</button>
+                                <button type="button" class="suggestion-button"
+                                    onclick="addSymptom('symptoms-headache', 'Behind the eyes')">Behind the
+                                    eyes</button>
+                                <button type="button" class="suggestion-button"
+                                    onclick="addSymptom('symptoms-headache', 'Light sensitivity')">Light
+                                    sensitivity</button>
+                                <button type="button" class="suggestion-button"
+                                    onclick="addSymptom('symptoms-headache', 'Neck stiffness')">Neck stiffness</button>
+                            </div>
+                        </div>
+                        <div id="tab-cough" class="tab-content">
+                            <textarea id="symptoms-cough" rows="4"
+                                placeholder="Describe your cough symptoms (e.g., dry, wet, productive, with phlegm)."></textarea>
+                            <div class="suggestion-buttons">
+                                <button type="button" class="suggestion-button"
+                                    onclick="addSymptom('symptoms-cough', 'Dry cough')">Dry cough</button>
+                                <button type="button" class="suggestion-button"
+                                    onclick="addSymptom('symptoms-cough', 'Cough with phlegm')">With phlegm</button>
+                                <button type="button" class="suggestion-button"
+                                    onclick="addSymptom('symptoms-cough', 'Sore throat')">Sore throat</button>
+                                <button type="button" class="suggestion-button"
+                                    onclick="addSymptom('symptoms-cough', 'Chest congestion')">Chest congestion</button>
+                            </div>
+                        </div>
+                        <div id="tab-custom" class="tab-content">
+                            <textarea id="symptoms-custom" rows="4"
+                                placeholder="Describe your symptoms in detail, including duration, severity, and any other relevant information."></textarea>
+                        </div>
+                    </div>
+
+                    <label for="medical-history">Medical History (optional)</label>
+                    <textarea id="medical-history" rows="3"
+                        placeholder="Any existing medical conditions, allergies, or current medications"></textarea>
+
+                    <button type="submit">Get Recommendations</button>
+                </form>
+            </div>
+        </div>
+        <div class="disclaimer-card">
+            <h3><i class="fas fa-exclamation-triangle"></i> Important Disclaimer</h3>
+            <p>This tool provides recommendations based on the information you provide. It is not a substitute for
+                professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other
+                qualified health provider with any questions you may have regarding a medical condition. Never disregard
+                professional medical advice or delay in seeking it because of something you have read here.</p>
+        </div>
+    </div>
+
+    <div id="recommendations-page" class="page" style="display: none;">
+        <div class="content-wrapper">
+            <div id="loader-rec" class="loader-rec">
+                <i class="fas fa-spinner fa-2x"></i>
+                <p>Analyzing your symptoms...</p>
+            </div>
+            <div id="results" class="recommendations-section" style="display: none;">
+                <h2>Recommendations</h2>
+                <div class="recommendations-grid">
+                    <div class="item">
+                        <div class="icon">
+                            <i class="fas fa-microscope"></i>
+                        </div>
+                        <h3>Disease</h3>
+                        <div id="disease-result">Enter your symptoms to get a potential diagnosis.</div>
+                    </div>
+                    <div class="item">
+                        <div class="icon">
+                            <i class="fas fa-file-medical-alt"></i>
+                        </div>
+                        <h3>Description</h3>
+                        <div id="description-result">Detailed description will appear here.</div>
+                    </div>
+                    <div class="item">
+                        <div class="icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Precautions</h3>
+                        <div id="precautions-result">Preventive measures will be listed here.</div>
+                    </div>
+                    <div class="item">
+                        <div class="icon">
+                            <i class="fas fa-pills"></i>
+                        </div>
+                        <h3>Medications</h3>
+                        <div id="medications-result">Medication suggestions will appear here.</div>
+                    </div>
+                    <div class="item">
+                        <div class="icon">
+                            <i class="fas fa-dumbbell"></i>
+                        </div>
+                        <h3>Workout</h3>
+                        <div id="workout-result">Exercise recommendations will be provided here.</div>
+                    </div>
+                    <div class="item">
+                        <div class="icon">
+                            <i class="fas fa-apple-alt"></i>
+                        </div>
+                        <h3>Diet</h3>
+                        <div id="diet-result">Dietary advice will be provided here.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="login-page" class="page" style="display: none;">
+        <div class="content-wrapper">
+            <div class="login-card">
+                <h2 id="login-header">User Login</h2>
+                <div id="welcome-state" class="welcome-container" style="display: none;">
+                    <i class="fas fa-user-circle profile-icon"></i>
+                    <h3>Welcome, <span id="welcome-username"></span>!</h3>
+                    <p>You are logged in.</p>
+                    <button id="logout-button" class="logout-button">Logout</button>
+                </div>
+                <form id="login-form">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required>
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                    <button type="submit" id="login-button">Login / Create Account</button>
+                </form>
+                <div id="login-message" class="login-message"></div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active" data-page="home-page">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" class="nav-item" data-page="recommendations-page">
+            <i class="fas fa-notes-medical"></i>
+            <span>Recommendations</span>
+        </a>
+        <a href="#" class="nav-item" data-page="login-page">
+            <i class="fas fa-user"></i>
+            <span>Login</span>
+        </a>
+    </nav>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navItems = document.querySelectorAll('.nav-item');
+            const pages = document.querySelectorAll('.page');
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const form = document.getElementById('symptom-form');
+            const loaderRec = document.getElementById('loader-rec');
+            const resultsSection = document.getElementById('results');
+            const loginForm = document.getElementById('login-form');
+            const logoutButton = document.getElementById('logout-button');
+            const loginMessage = document.getElementById('login-message');
+            const loginHeader = document.getElementById('login-header');
+            const welcomeState = document.getElementById('welcome-state');
+            const welcomeUsername = document.getElementById('welcome-username');
+
+            // Function to show a specific page and update active nav item
+            function showPage(pageId) {
+                pages.forEach(page => page.style.display = 'none');
+                document.getElementById(pageId).style.display = 'block';
+                navItems.forEach(item => item.classList.remove('active'));
+                document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
+            }
+
+            // Handle navigation clicks
+            navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showPage(item.getAttribute('data-page'));
+                });
+            });
+
+            // Initial page load
+            showPage('home-page');
+
+            // Tab functionality for symptom entry
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetTab = button.getAttribute('data-tab');
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    button.classList.add('active');
+                    document.getElementById(targetTab).classList.add('active');
+                });
+            });
+
+            // Add suggestion text to textarea
+            window.addSymptom = function (textareaId, text) {
+                const textarea = document.getElementById(textareaId);
+                const currentText = textarea.value.trim();
+                if (currentText && !currentText.endsWith('.')) {
+                    textarea.value = currentText + ', ' + text.toLowerCase();
+                } else {
+                    textarea.value += text;
+                }
+                textarea.focus();
+            };
+
+            // Form submission logic
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const age = document.getElementById('age').value;
+                const gender = document.getElementById('gender').value;
+                const activeTabContent = document.querySelector('.tab-content.active');
+                const symptomsTextarea = activeTabContent.querySelector('textarea');
+                const symptoms = symptomsTextarea.value;
+                const medicalHistory = document.getElementById('medical-history').value;
+
+                // Show loader and hide results section
+                loaderRec.style.display = 'flex';
+                resultsSection.style.display = 'none';
+
+                showPage('recommendations-page'); // Automatically switch to recommendations page
+
+                try {
+                    const response = await callGeminiAPI(age, gender, symptoms, medicalHistory);
+
+                    document.getElementById('disease-result').innerHTML = response.disease || 'No specific disease identified based on symptoms.';
+                    document.getElementById('description-result').innerHTML = response.description || 'No detailed description available.';
+                    document.getElementById('precautions-result').innerHTML = response.precautions || 'No specific precautions suggested.';
+                    document.getElementById('medications-result').innerHTML = response.medications || 'No specific medications suggested.';
+                    document.getElementById('workout-result').innerHTML = response.workout || 'No specific workout recommendations.';
+                    document.getElementById('diet-result').innerHTML = response.diet || 'No specific dietary recommendations.';
+
+                    resultsSection.style.display = 'block';
+                } catch (err) {
+                    // Custom message for API error instead of alert
+                    const messageBox = document.createElement('div');
+                    messageBox.style.cssText = "background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 15px; border-radius: 10px; margin-top: 20px;";
+                    messageBox.innerHTML = "<strong>Error:</strong> " + err.message + "<br>Check console for details.";
+                    document.getElementById('recommendations-page').querySelector('.content-wrapper').appendChild(messageBox);
+                    console.error(err);
+                    resultsSection.style.display = 'block';
+                    document.getElementById('disease-result').innerHTML = 'Error fetching data.';
+                    document.getElementById('description-result').innerHTML = 'Please check your API key or try again later.';
+                    document.getElementById('precautions-result').innerHTML = '';
+                    document.getElementById('medications-result').innerHTML = '';
+                    document.getElementById('workout-result').innerHTML = '';
+                    document.getElementById('diet-result').innerHTML = '';
+                } finally {
+                    loaderRec.style.display = 'none';
+                }
+            });
+
+            async function callGeminiAPI(age, gender, symptoms, medicalHistory) {
+                const apiKey = "AIzaSyAJXz6E8Yi2KFXeMlZp_DPkf0a9oNo2qhw"; // 
+                const model = "gemini-2.5-flash-preview-05-20"; // Updated to use the correct model
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
+                const prompt = `As a medical assistant, provide recommendations for a ${age}-year-old ${gender} with these symptoms: ${symptoms}. Medical history: ${medicalHistory || 'None'}.
+                Return only valid JSON with keys: disease, description, precautions, medications, workout, diet.`;
+
+                const body = {
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: { responseMimeType: "application/json" }
+                };
+
+                const res = await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(body)
+                });
+
+                const data = await res.json();
+                console.log("Full API response:", data);
+
+                if (!res.ok) {
+                    throw new Error(data.error?.message || "API Error");
+                }
+
+                let aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (!aiText) throw new Error("No text returned by AI.");
+
+                try {
+                    return JSON.parse(aiText.trim());
+                } catch {
+                    return {
+                        disease: "Analysis incomplete.",
+                        description: aiText || "Could not parse detailed recommendations. Please try again with more specific symptoms.",
+                        precautions: "—",
+                        medications: "—",
+                        workout: "—",
+                        diet: "—"
+                    };
+                }
+            }
+
+            // Login/Logout logic
+            function updateLoginState() {
+                const username = localStorage.getItem('username');
+                if (username) {
+                    welcomeUsername.textContent = username;
+                    loginForm.style.display = 'none';
+                    welcomeState.style.display = 'flex';
+                    loginMessage.textContent = 'You are logged in.';
+                    loginHeader.textContent = 'Profile';
+                } else {
+                    loginForm.style.display = 'block';
+                    welcomeState.style.display = 'none';
+                    loginMessage.textContent = 'Enter a username and password to create an account.';
+                    loginHeader.textContent = 'User Login';
+                }
+            }
+
+            loginForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+
+                // For a real app, this is not a secure way to store user info.
+                // We're doing this for a simple demo and to persist state.
+                localStorage.setItem('username', username);
+                localStorage.setItem('isLoggedIn', 'true');
+
+                loginMessage.textContent = `Welcome back, ${username}!`;
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                updateLoginState();
+            });
+
+            logoutButton.addEventListener('click', function () {
+                localStorage.removeItem('username');
+                localStorage.removeItem('isLoggedIn');
+                loginMessage.textContent = 'You have successfully logged out.';
+                updateLoginState();
+            });
+
+            // Initial check for login state
+            updateLoginState();
+        });
+    </script>
 </body>
+
 </html>
